@@ -1,5 +1,5 @@
-# compilio-compiler
-Compilo Compiler
+# compilio-runner
+Compilo Runner
 
 ## Installation
 
