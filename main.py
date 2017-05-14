@@ -9,31 +9,40 @@ async def root(request):
     return json({"wip": "wip"})
 
 
-@app.route("/compile",  methods=['POST'])
+@app.route("/compile", methods=['POST'])
 async def compile(request):
-    # TODO : Get input files parse output file
-    # TODO: Get the build process and execute it
+    # TODO : param : task_id, build process commands (bash script)
+    # TODO : Record a new task
+    # TODO : Spawn a new worker ?
+    # TODO : Get the build process and execute it
+    # TODO : Need to know output file to send to Compilio
+    # TODO : Send result to Compilio
+
     return json({"wip": "wip"})
 
 
-@app.route("/install",  methods=['POST'])
+@app.route("/install", methods=['POST'])
 async def install(request):
+    # TODO : Add a new authorized compiler entry
     return json({"wip": "wip"})
 
 
-@app.route("/uninstall",  methods=['DELETE'])
+@app.route("/uninstall", methods=['DELETE'])
 async def uninstall(request):
+    # TODO : Remove a new authorized compiler entry
     return json({"wip": "wip"})
 
 
-@app.route("/list",  methods=['GET'])
+@app.route("/list", methods=['GET'])
 async def list(request):
-    # List installed compilers
+    # TODO : List installed compilers
     return json({"wip": "wip"})
 
 
-@app.route("/status",  methods=['GET'])
+@app.route("/status", methods=['GET'])
 async def status(request):
+    # TODO : Get a task status
+    # TODO : param : task_id
     return json({"wip": "wip"})
 
 
