@@ -1,3 +1,5 @@
+import subprocess
+
 from sanic import Sanic
 from sanic.response import json
 
@@ -18,7 +20,11 @@ async def compile(request):
     # TODO : Need to know output file to send to Compilio
     # TODO : Send result to Compilio
 
-    return json({"wip": "wip"})
+    bash_command = request.form['bash'][0]
+    process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
+    return json({"output": output})
 
 
 @app.route("/install", methods=['POST'])
