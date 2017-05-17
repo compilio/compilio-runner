@@ -59,13 +59,18 @@ async def install(request):
     installed_compilers.append(compiler_name)
 
     yaml.dump(installed_compilers, open(INSTALLED_COMPILERS_YML, 'w'))
-
     return json({"wip": "wip"})
 
 
 @app.route("/uninstall", methods=['DELETE'])
 async def uninstall(request):
-    # TODO : Remove a new authorized compiler entry
+    compiler_name = request.form['compiler_name'][0]
+    if compiler_name not in installed_compilers:
+        return json({"already added": "wip"})
+
+    installed_compilers.remove(compiler_name)
+
+    yaml.dump(installed_compilers, open(INSTALLED_COMPILERS_YML, 'w'))
     return json({"wip": "wip"})
 
 
