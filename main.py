@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from sanic import Sanic
@@ -11,6 +12,7 @@ async def root(request):
     return json({"wip": "wip"})
 
 
+
 @app.route("/compile", methods=['POST'])
 async def compile(request):
     # TODO : param : task_id, build process commands (bash script)
@@ -20,7 +22,19 @@ async def compile(request):
     # TODO : Need to know output file to send to Compilio
     # TODO : Send result to Compilio
 
+    def save_files(req):
+        path = 'tasks/' + req.form['task_id'][0] + '/input_files/'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        filename = req.files.get('0').name
+        with open(os.path.join(path, filename), 'wb') as file:
+            file.write(req.files.get('0').body)
+            file.close()
+
     bash_command = request.form['bash'][0]
+
+    save_files(request)
+
     process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
