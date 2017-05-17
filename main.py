@@ -1,10 +1,12 @@
 import os
 import subprocess
 
+import docker
 from sanic import Sanic
 from sanic.response import json
 
 app = Sanic()
+docker_client = docker.from_env()
 
 
 @app.route("/")
@@ -35,6 +37,8 @@ async def compile(request):
 
     workspace_path = save_files(request)
 
+    docker_output = docker_client.containers.run("alpine", "ls -l")
+    print(docker_output)
     process = subprocess.Popen(bash_command.split(),
                                stdout=subprocess.PIPE, cwd=workspace_path)
     output, error = process.communicate()
