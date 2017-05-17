@@ -29,12 +29,14 @@ async def compile(request):
         with open(os.path.join(path, filename), 'wb') as file:
             file.write(req.files.get('0').body)
             file.close()
+        return path
 
     bash_command = request.form['bash'][0]
 
-    save_files(request)
+    workspace_path = save_files(request)
 
-    process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+    process = subprocess.Popen(bash_command.split(),
+                               stdout=subprocess.PIPE, cwd=workspace_path)
     output, error = process.communicate()
 
     return json({"output": output})
