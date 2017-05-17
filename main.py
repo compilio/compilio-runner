@@ -2,11 +2,15 @@ import os
 import subprocess
 
 import docker
+import yaml
 from sanic import Sanic
 from sanic.response import json
 
 app = Sanic()
 docker_client = docker.from_env()
+INSTALLED_COMPILERS_YML = 'installed_compilers.yml'
+with open(INSTALLED_COMPILERS_YML, 'r') as yml_file:
+    installed_compilers = yaml.load(yml_file)
 
 
 @app.route("/")
@@ -48,7 +52,14 @@ async def compile(request):
 
 @app.route("/install", methods=['POST'])
 async def install(request):
-    # TODO : Add a new authorized compiler entry
+    compiler_name = request.form['compiler_name'][0]
+    if compiler_name in installed_compilers:
+        return json({"already added": "wip"})
+
+    installed_compilers.append(compiler_name)
+
+    yaml.dump(installed_compilers, open(INSTALLED_COMPILERS_YML, 'w'))
+
     return json({"wip": "wip"})
 
 
