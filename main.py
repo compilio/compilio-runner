@@ -12,7 +12,6 @@ async def root(request):
     return json({"wip": "wip"})
 
 
-
 @app.route("/compile", methods=['POST'])
 async def compile(request):
     # TODO : param : task_id, build process commands (bash script)
