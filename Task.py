@@ -3,6 +3,8 @@ import subprocess
 
 import docker
 
+from TaskState import TaskState
+
 docker_client = docker.from_env()
 
 
@@ -10,9 +12,13 @@ class Task:
     def __init__(self, task_id):
         self.id = task_id
         self.workspace_path = None
+        self.state = TaskState.COMPILING
 
     def get_status(self):
-        pass
+        return self.state
+
+    def change_state(self, state):
+        self.state = state
 
     def save_input_files(self, input_files):
         path = 'tasks/' + self.id + '/input_files/'
@@ -34,4 +40,5 @@ class Task:
         docker_output = docker_client.containers.run("alpine", "ls -l")
         print(docker_output)
 
+        self.change_state(TaskState.SUCCESS)
         return output
