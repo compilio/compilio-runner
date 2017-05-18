@@ -53,5 +53,8 @@ class Task:
 
     @staticmethod
     def get_task(task_id):
-        file = open('tasks/' + task_id + '/task.obj', 'rb')
-        return pickle.load(file)
+        try:
+            file = open('tasks/' + task_id + '/task.obj', 'rb')
+            return pickle.load(file)
+        except FileNotFoundError:
+            return None

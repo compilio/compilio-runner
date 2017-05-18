@@ -62,10 +62,15 @@ async def get_installed_compilers(request):
 
 @app.route("/state", methods=['GET'])
 async def state(request):
-    task = Task.get_task(request.form['task_id'][0])
+    if 'task_id' not in request.args:
+        return json({"state": "task_id required"})
+
+    task = Task.get_task(request.args['task_id'][0])
+
     if task is None:
         return json({"state": "not found"})
-    return json({"state": task.get_state()})
+
+    return json({"state": task.get_state().name})
 
 
 if __name__ == "__main__":
