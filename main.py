@@ -61,11 +61,11 @@ async def list(request):
     return json({"wip": "wip"})
 
 
-@app.route("/status", methods=['GET'])
+@app.route("/state", methods=['GET'])
 async def status(request):
     # TODO : Get a task status
     # TODO : param : task_id
-    return json({"wip": "wip"})
+    return json({"state": "wip"})
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 import os
+import pickle
 import subprocess
 
 import docker
@@ -14,11 +15,17 @@ class Task:
         self.workspace_path = None
         self.state = TaskState.COMPILING
 
+    def save(self):
+        file = open('tasks/' + self.id + '/task.obj', 'wb')
+        this = self
+        pickle.dump(this, file)
+
     def get_status(self):
         return self.state
 
     def change_state(self, state):
         self.state = state
+        self.save()
 
     def save_input_files(self, input_files):
         path = 'tasks/' + self.id + '/input_files/'
@@ -30,6 +37,7 @@ class Task:
             file.close()
 
         self.workspace_path = path
+        self.save()
 
     def compile(self, bash_command):
         process = subprocess.Popen(bash_command.split(),
@@ -42,3 +50,8 @@ class Task:
 
         self.change_state(TaskState.SUCCESS)
         return output
+
+    @staticmethod
+    def get_task(task_id):
+        file = open('tasks/' + task_id + '/task.obj', 'rb')
+        return pickle.load(file)
