@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import docker
 
@@ -25,8 +26,8 @@ class Task:
         self.workspace_path = path
 
     def compile(self, bash_command):
-        process = os.subprocess.Popen(bash_command.split(),
-                                      stdout=os.subprocess.PIPE, cwd=self.workspace_path)
+        process = subprocess.Popen(bash_command.split(),
+                                   stdout=subprocess.PIPE, cwd=self.workspace_path)
         output, error = process.communicate()
 
         # TODO : docker
