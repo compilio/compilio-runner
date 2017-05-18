@@ -62,10 +62,11 @@ async def list(request):
 
 
 @app.route("/state", methods=['GET'])
-async def status(request):
-    # TODO : Get a task status
-    # TODO : param : task_id
-    return json({"state": "wip"})
+async def state(request):
+    task = Task.get_task(request.form['task_id'][0])
+    if task is None:
+        return json({"state": "not found"})
+    return json({"state": task.get_state()})
 
 
 if __name__ == "__main__":

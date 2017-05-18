@@ -20,7 +20,7 @@ class Task:
         this = self
         pickle.dump(this, file)
 
-    def get_status(self):
+    def get_state(self):
         return self.state
 
     def change_state(self, state):
