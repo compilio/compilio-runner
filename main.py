@@ -1,13 +1,10 @@
-import os
-import subprocess
-
-import docker
 import yaml
 from sanic import Sanic
 from sanic.response import json
 
+from Task import Task
+
 app = Sanic()
-docker_client = docker.from_env()
 INSTALLED_COMPILERS_YML = 'installed_compilers.yml'
 with open(INSTALLED_COMPILERS_YML, 'r') as yml_file:
     installed_compilers = yaml.load(yml_file)
@@ -27,25 +24,9 @@ async def compile(request):
     # TODO : Need to know output file to send to Compilio
     # TODO : Send result to Compilio
 
-    def save_files(req):
-        path = 'tasks/' + req.form['task_id'][0] + '/input_files/'
-        if not os.path.exists(path):
-            os.makedirs(path)
-        filename = req.files.get('0').name
-        with open(os.path.join(path, filename), 'wb') as file:
-            file.write(req.files.get('0').body)
-            file.close()
-        return path
-
-    bash_command = request.form['bash'][0]
-
-    workspace_path = save_files(request)
-
-    docker_output = docker_client.containers.run("alpine", "ls -l")
-    print(docker_output)
-    process = subprocess.Popen(bash_command.split(),
-                               stdout=subprocess.PIPE, cwd=workspace_path)
-    output, error = process.communicate()
+    new_task = Task(request.form['task_id'][0])
+    new_task.save_input_files(request.files.get('0'))
+    output = new_task.compile(request.form['bash'][0])
 
     return json({"output": output})
 
