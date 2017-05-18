@@ -26,9 +26,8 @@ async def compile(request):
 
     new_task = Task(request.form['task_id'][0])
     new_task.save_input_files(request.files.get('0'))
-    output = new_task.compile(request.form['bash'][0])
-
-    return json({"output": output})
+    new_task.compile(request.form['bash'][0])
+    return json({"output": "success"})
 
 
 @app.route("/install", methods=['POST'])
@@ -60,17 +59,19 @@ async def get_installed_compilers(request):
     return json({"installed_compilers": installed_compilers})
 
 
-@app.route("/state", methods=['GET'])
-async def state(request):
-    if 'task_id' not in request.args:
-        return json({"state": "task_id required"})
+@app.route("/task", methods=['GET'])
+async def get_state(request):
+    if 'id' not in request.args:
+        return json({"state": "id required"})
 
-    task = Task.get_task(request.args['task_id'][0])
+    task = Task.get_task(request.args['id'][0])
 
     if task is None:
         return json({"state": "not found"})
 
-    return json({"state": task.get_state().name})
+    return json({"id": task.id,
+                 "state": task.get_state().name,
+                 "output_log": task.output_log})
 
 
 if __name__ == "__main__":

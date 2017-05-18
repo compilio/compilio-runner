@@ -15,6 +15,8 @@ class Task:
         self.workspace_path = None
         self.state = TaskState.COMPILING
 
+        self.output_log = None
+
     def save(self):
         file = open('tasks/' + self.id + '/task.obj', 'wb')
         this = self
@@ -42,14 +44,13 @@ class Task:
     def compile(self, bash_command):
         process = subprocess.Popen(bash_command.split(),
                                    stdout=subprocess.PIPE, cwd=self.workspace_path)
-        output, error = process.communicate()
+        self.output_log, error = process.communicate()
 
         # TODO : docker
         docker_output = docker_client.containers.run("alpine", "ls -l")
         print(docker_output)
 
         self.change_state(TaskState.SUCCESS)
-        return output
 
     @staticmethod
     def get_task(task_id):
