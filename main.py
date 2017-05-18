@@ -55,10 +55,9 @@ async def uninstall(request):
     return json({"wip": "wip"})
 
 
-@app.route("/list", methods=['GET'])
-async def list(request):
-    # TODO : List installed compilers
-    return json({"wip": "wip"})
+@app.route("/installed_compilers", methods=['GET'])
+async def get_installed_compilers(request):
+    return json({"installed_compilers": installed_compilers})
 
 
 @app.route("/state", methods=['GET'])
