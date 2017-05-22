@@ -44,13 +44,17 @@ class Task:
 
     def compile(self, bash_command):
         filename = 'tasks/' + self.id + '/output.log'
+        print('Running command : ' + bash_command)
 
         with open(filename, 'wb') as writer, open(filename, 'rb', 1) as reader:
-            process = subprocess.Popen(bash_command.split(), stdout=writer, cwd=self.workspace_path)
+            process = subprocess.Popen(bash_command,
+                                       stdout=writer,
+                                       cwd=self.workspace_path,
+                                       shell=True)
             while process.poll() is None:
-                print(str(reader.read()))
+                print(reader.read())
                 time.sleep(0.5)
-            print(str(reader.read()))
+            print(reader.read())
 
         with open(filename, 'rb', 1) as reader:
             self.output_log = reader.read()
