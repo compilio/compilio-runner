@@ -1,6 +1,7 @@
 import os
 import pickle
 import subprocess
+import time
 
 import docker
 
@@ -42,13 +43,21 @@ class Task:
         self.save()
 
     def compile(self, bash_command):
-        process = subprocess.Popen(bash_command.split(),
-                                   stdout=subprocess.PIPE, cwd=self.workspace_path)
-        self.output_log, error = process.communicate()
+        filename = 'tasks/' + self.id + '/output.log'
+
+        with open(filename, 'wb') as writer, open(filename, 'rb', 1) as reader:
+            process = subprocess.Popen(bash_command.split(), stdout=writer, cwd=self.workspace_path)
+            while process.poll() is None:
+                print(str(reader.read()))
+                time.sleep(0.5)
+            print(str(reader.read()))
+
+        with open(filename, 'rb', 1) as reader:
+            self.output_log = reader.read()
 
         # TODO : docker
-        docker_output = docker_client.containers.run("alpine", "ls -l")
-        print(docker_output)
+        # docker_output = docker_client.containers.run("alpine", "ls -l")
+        # print(docker_output)
 
         self.change_state(TaskState.SUCCESS)
 
