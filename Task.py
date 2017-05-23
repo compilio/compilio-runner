@@ -11,8 +11,9 @@ docker_client = docker.from_env()
 
 
 class Task:
-    def __init__(self, task_id):
+    def __init__(self, task_id, output_files):
         self.id = task_id
+        self.output_files = output_files
         self.workspace_path = None
         self.state = TaskState.COMPILING
 
@@ -58,10 +59,6 @@ class Task:
 
         with open(filename, 'rb', 1) as reader:
             self.output_log = reader.read()
-
-        # TODO : docker
-        # docker_output = docker_client.containers.run("alpine", "ls -l")
-        # print(docker_output)
 
         self.change_state(TaskState.SUCCESS)
 
