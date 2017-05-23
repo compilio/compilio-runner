@@ -24,7 +24,8 @@ async def compile(request):
     # TODO : Need to know output file to send to Compilio
     # TODO : Send result to Compilio
 
-    new_task = Task(request.form['task_id'][0], request.form['output_files'][0])
+    new_task = Task(request.form['task_id'][0],
+                    request.form['output_files'][0])
     new_task.save_input_files(request.files.get('0'))
     new_task.compile(request.form['bash'][0])
     return json({"output": "success"})
