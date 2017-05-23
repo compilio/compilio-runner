@@ -3,11 +3,7 @@ import pickle
 import subprocess
 import time
 
-import docker
-
 from TaskState import TaskState
-
-docker_client = docker.from_env()
 
 
 class Task:
