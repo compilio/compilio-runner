@@ -1,5 +1,5 @@
 import yaml
-from sanic import Sanic
+from sanic import Sanic, response
 from sanic.response import json
 
 from Task import Task
@@ -24,7 +24,7 @@ async def compile(request):
     # TODO : Need to know output file to send to Compilio
     # TODO : Send result to Compilio
 
-    new_task = Task(request.form['task_id'][0], request.form['output_files'])
+    new_task = Task(request.form['task_id'][0], request.form['output_files'][0])
     new_task.save_input_files(request.files.get('0'))
     new_task.compile(request.form['bash'][0])
     return json({"output": "success"})
@@ -72,6 +72,19 @@ async def get_state(request):
     return json({"id": task.id,
                  "state": task.get_state().name,
                  "output_log": task.output_log})
+
+
+@app.route("/get_output_files", methods=['GET'])
+async def get_output_files(request):
+    if 'id' not in request.args:
+        return json({"error": "id required"})
+
+    task = Task.get_task(request.args['id'][0])
+
+    if task is None:
+        return json({"error": "Task not found"})
+
+    return await response.file(task.get_output_files())
 
 
 if __name__ == "__main__":

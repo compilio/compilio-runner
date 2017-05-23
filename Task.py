@@ -62,6 +62,11 @@ class Task:
 
         self.change_state(TaskState.SUCCESS)
 
+    def get_output_files(self):
+        if self.state != TaskState.SUCCESS:
+            return None
+        return 'tasks/' + self.id + '/input_files/' + self.output_files
+
     @staticmethod
     def get_task(task_id):
         try:
