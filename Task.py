@@ -2,6 +2,7 @@ import os
 import pickle
 import subprocess
 import time
+from zipfile import ZipFile
 
 from TaskState import TaskState
 
@@ -40,10 +41,10 @@ class Task:
         self.save()
 
     def compile(self, bash_command):
-        filename = 'tasks/' + self.id + '/output.log'
+        output_file = 'tasks/' + self.id + '/output.log'
         print('Running command : ' + bash_command)
 
-        with open(filename, 'wb') as writer, open(filename, 'rb', 1) as reader:
+        with open(output_file, 'wb') as writer, open(output_file, 'rb', 1) as reader:
             process = subprocess.Popen(bash_command,
                                        stdout=writer,
                                        cwd=self.workspace_path,
@@ -53,15 +54,18 @@ class Task:
                 time.sleep(0.5)
             print(reader.read())
 
-        with open(filename, 'rb', 1) as reader:
+        with open(output_file, 'rb', 1) as reader:
             self.output_log = reader.read()
+
+        with ZipFile('tasks/' + self.id + '/output.zip', 'w') as zip_file:
+            zip_file.write('tasks/' + self.id + '/input_files/' + self.output_files, self.output_files)
 
         self.change_state(TaskState.SUCCESS)
 
-    def get_output_files(self):
+    def get_output_zip(self):
         if self.state != TaskState.SUCCESS:
             return None
-        return 'tasks/' + self.id + '/input_files/' + self.output_files
+        return 'tasks/' + self.id + '/output.zip'
 
     @staticmethod
     def get_task(task_id):
