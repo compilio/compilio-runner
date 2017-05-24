@@ -9,6 +9,7 @@ from TaskState import TaskState
 
 class Task:
     TASKS_FOLDER = 'tasks/'
+    SAVED_OBJECT_NAME = 'task.obj'
 
     def __init__(self, task_id, output_files):
         self.id = task_id
@@ -21,8 +22,11 @@ class Task:
     def __get_workspace_path(self):
         return Task.TASKS_FOLDER + self.id + '/workspace/'
 
+    def __get_save_path(self):
+        return Task.TASKS_FOLDER + self.id + '/' + Task.SAVED_OBJECT_NAME
+
     def save(self):
-        file = open('tasks/' + self.id + '/task.obj', 'wb')
+        file = open(self.__get_save_path(), 'wb')
         this = self
         pickle.dump(this, file)
 
@@ -75,7 +79,7 @@ class Task:
     @staticmethod
     def get_task(task_id):
         try:
-            file = open('tasks/' + task_id + '/task.obj', 'rb')
+            file = open(Task.TASKS_FOLDER + task_id + '/' + Task.SAVED_OBJECT_NAME, 'rb')
             return pickle.load(file)
         except FileNotFoundError:
             return None
