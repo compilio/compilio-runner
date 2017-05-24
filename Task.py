@@ -8,6 +8,8 @@ from TaskState import TaskState
 
 
 class Task:
+    TASKS_FOLDER = 'tasks/'
+
     def __init__(self, task_id, output_files):
         self.id = task_id
         self.output_files = output_files
@@ -15,6 +17,9 @@ class Task:
         self.state = TaskState.COMPILING
 
         self.output_log = None
+
+    def __get_workspace_path(self):
+        return Task.TASKS_FOLDER + self.id + '/workspace/'
 
     def save(self):
         file = open('tasks/' + self.id + '/task.obj', 'wb')
@@ -29,15 +34,15 @@ class Task:
         self.save()
 
     def save_input_files(self, input_files):
-        path = 'tasks/' + self.id + '/input_files/'
-        if not os.path.exists(path):
-            os.makedirs(path)
+        workspace_path = self.__get_workspace_path()
+        if not os.path.exists(workspace_path):
+            os.makedirs(workspace_path)
         filename = input_files.name
-        with open(os.path.join(path, filename), 'wb') as file:
+        with open(os.path.join(workspace_path, filename), 'wb') as file:
             file.write(input_files.body)
             file.close()
 
-        self.workspace_path = path
+        self.workspace_path = workspace_path
         self.save()
 
     def compile(self, bash_command):
@@ -58,7 +63,7 @@ class Task:
             self.output_log = reader.read()
 
         with ZipFile('tasks/' + self.id + '/output.zip', 'w') as zip_file:
-            zip_file.write('tasks/' + self.id + '/input_files/' + self.output_files, self.output_files)
+            zip_file.write(self.__get_workspace_path() + self.output_files, self.output_files)
 
         self.change_state(TaskState.SUCCESS)
 
