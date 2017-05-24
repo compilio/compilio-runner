@@ -85,7 +85,7 @@ async def get_output_files(request):
     if task is None:
         return json({"error": "Task not found"})
 
-    return await response.file(task.get_output_zip())
+    return await response.file(task.get_output_zip_path())
 
 
 if __name__ == "__main__":

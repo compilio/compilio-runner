@@ -10,6 +10,7 @@ from TaskState import TaskState
 class Task:
     TASKS_FOLDER = 'tasks/'
     SAVED_OBJECT_NAME = 'task.obj'
+    OUTPUT_NAME = 'output.zip'
 
     def __init__(self, task_id, output_files):
         self.id = task_id
@@ -24,6 +25,9 @@ class Task:
 
     def __get_save_path(self):
         return Task.TASKS_FOLDER + self.id + '/' + Task.SAVED_OBJECT_NAME
+
+    def get_output_zip_path(self):
+        return Task.TASKS_FOLDER + self.id + '/' + Task.OUTPUT_NAME
 
     def save(self):
         file = open(self.__get_save_path(), 'wb')
@@ -66,15 +70,10 @@ class Task:
         with open(output_file, 'rb', 1) as reader:
             self.output_log = reader.read()
 
-        with ZipFile('tasks/' + self.id + '/output.zip', 'w') as zip_file:
+        with ZipFile(self.get_output_zip_path(), 'w') as zip_file:
             zip_file.write(self.__get_workspace_path() + self.output_files, self.output_files)
 
         self.change_state(TaskState.SUCCESS)
-
-    def get_output_zip(self):
-        if self.state != TaskState.SUCCESS:
-            return None
-        return 'tasks/' + self.id + '/output.zip'
 
     @staticmethod
     def get_task(task_id):
