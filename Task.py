@@ -54,6 +54,10 @@ class Task:
         self.workspace_path = workspace_path
         self.save()
 
+    def __zip_output_files(self):
+        with ZipFile(self.get_output_zip_path(), 'w') as zip_file:
+            zip_file.write(self.__get_workspace_path() + self.output_files, self.output_files)
+
     def compile(self, bash_command):
         output_file = Task.TASKS_FOLDER + self.id + '/' + Task.OUTPUT_LOG_NAME
         print('Running command : ' + bash_command)
@@ -71,8 +75,7 @@ class Task:
         with open(output_file, 'rb', 1) as reader:
             self.output_log = reader.read()
 
-        with ZipFile(self.get_output_zip_path(), 'w') as zip_file:
-            zip_file.write(self.__get_workspace_path() + self.output_files, self.output_files)
+        self.__zip_output_files()
 
         self.change_state(TaskState.SUCCESS)
 
