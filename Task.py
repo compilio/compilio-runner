@@ -10,7 +10,8 @@ from TaskState import TaskState
 class Task:
     TASKS_FOLDER = 'tasks/'
     SAVED_OBJECT_NAME = 'task.obj'
-    OUTPUT_NAME = 'output.zip'
+    OUTPUT_ZIP_NAME = 'output.zip'
+    OUTPUT_LOG_NAME = 'output.log'
 
     def __init__(self, task_id, output_files):
         self.id = task_id
@@ -27,7 +28,7 @@ class Task:
         return Task.TASKS_FOLDER + self.id + '/' + Task.SAVED_OBJECT_NAME
 
     def get_output_zip_path(self):
-        return Task.TASKS_FOLDER + self.id + '/' + Task.OUTPUT_NAME
+        return Task.TASKS_FOLDER + self.id + '/' + Task.OUTPUT_ZIP_NAME
 
     def save(self):
         file = open(self.__get_save_path(), 'wb')
@@ -54,7 +55,7 @@ class Task:
         self.save()
 
     def compile(self, bash_command):
-        output_file = 'tasks/' + self.id + '/output.log'
+        output_file = Task.TASKS_FOLDER + self.id + '/' + Task.OUTPUT_LOG_NAME
         print('Running command : ' + bash_command)
 
         with open(output_file, 'wb') as writer, open(output_file, 'rb', 1) as reader:
