@@ -1,3 +1,5 @@
+import _thread
+
 import yaml
 from sanic import Sanic, response
 from sanic.response import json
@@ -17,17 +19,12 @@ async def root(request):
 
 @app.route("/compile", methods=['POST'])
 async def compile(request):
-    # TODO : param : task_id, build process commands (bash script)
-    # TODO : Record a new task
-    # TODO : Spawn a new worker ?
-    # TODO : Get the build process and execute it
-    # TODO : Need to know output file to send to Compilio
-    # TODO : Send result to Compilio
-
     new_task = Task(request.form['task_id'][0],
                     request.form['output_files'][0])
     new_task.save_input_files(request.files.get('0'))
-    new_task.compile(request.form['bash'][0])
+
+    _thread.start_new_thread(new_task.compile, (request.form['bash'][0],))
+
     return json({"output": "success"})
 
 
