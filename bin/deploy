@@ -1,0 +1,12 @@
+#!/bin/bash
+
+sudo pip install virtualenv
+
+git clone https://github.com/compilio/compilio-runner.git
+cd compilio-runner
+
+virtualenv env
+source env/bin/activate
+
+pip install -r requirements.txt
+nohup python main.py
