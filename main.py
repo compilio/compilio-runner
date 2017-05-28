@@ -63,12 +63,12 @@ async def get_installed_compilers(request):
 @app.route("/task", methods=['GET'])
 async def get_state(request):
     if 'id' not in request.args:
-        return json({"state": "id required"})
+        return json({"state": "id required"}, status=400)
 
     task = Task.get_task(request.args['id'][0])
 
     if task is None:
-        return json({"state": "not found"})
+        return json({"state": "not found"}, status=404)
 
     return json({"id": task.id,
                  "state": task.get_state().name,
@@ -83,7 +83,7 @@ async def get_output_files(request):
     task = Task.get_task(request.args['id'][0])
 
     if task is None:
-        return json({"error": "Task not found"})
+        return json({"error": "Task not found"}, status=404)
 
     return await response.file(task.get_output_zip_path())
 
