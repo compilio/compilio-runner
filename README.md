@@ -19,6 +19,7 @@ python main.py
 The Compilio Runner can be deployed using the deploy script script:
 
 ```
+sudo pip install virtualenv
 ./bin/deploy
 ```
 
