@@ -28,3 +28,5 @@ Close your terminal instance when the following line appears:
 ```
 nohup: ignoring input and appending output to ‘nohup.out’
 ```
+
+Server will listen on port `7894`.
