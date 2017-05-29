@@ -68,6 +68,10 @@ class Task:
                                        cwd=self.workspace_path,
                                        shell=True)
             while process.poll() is None:
+                with open(output_file, 'rb', 1) as reader2:
+                    self.output_log = reader2.read()
+                self.save()
+
                 print(reader.read())
                 time.sleep(0.5)
             print(reader.read())
