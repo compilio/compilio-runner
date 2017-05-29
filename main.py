@@ -1,8 +1,8 @@
 import _thread
-
 import yaml
 from sanic import Sanic, response
 from sanic.response import json
+import os
 
 from Task import Task
 
@@ -86,4 +86,4 @@ async def get_output_files(request):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7894)
+    app.run(host="0.0.0.0", port=os.getenv('PORT', 7894))
